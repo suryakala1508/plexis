@@ -1,0 +1,131 @@
+{
+  "templates": [
+    {
+      "name": "Premium",
+      "_id": "69b97812f7a5be4a806c12d6",
+      "customization": {
+        "primaryColor": "#9916b1",
+        "headerColor": "#22031f",
+        "fontFamily": "Poppins",
+        "tableColumnColor": "#ffffff",
+        "tableColumnOpacity": 1
+      }
+    },
+    {
+      "name": "New Test",
+      "_id": "69b60aaf2fd487ee6a2dd9e9",
+      "customization": {
+        "primaryColor": "#9916b1",
+        "headerColor": "#22031f",
+        "fontFamily": "Poppins",
+        "tableColumnColor": "#ffffff",
+        "tableColumnOpacity": 1
+      }
+    },
+    {
+      "name": "sdsd",
+      "_id": "69b41a18c2f6a7884f6d5663",
+      "customization": {
+        "primaryColor": "#9916b1",
+        "headerColor": "#22031f",
+        "fontFamily": "Poppins",
+        "tableColumnColor": "#ffffff",
+        "tableColumnOpacity": 1
+      }
+    },
+    {
+      "name": "dvdv",
+      "_id": "69b35e4cc2f6a7884f6d44b9",
+      "customization": {
+        "primaryColor": "#9916b1",
+        "headerColor": "#22031f",
+        "fontFamily": "Poppins",
+        "tableColumnColor": "#ffffff",
+        "tableColumnOpacity": 1
+      }
+    },
+    {
+      "name": "Basic",
+      "_id": "69b2ee42456bcc68296745c0",
+      "customization": {
+        "primaryColor": "#065f46",
+        "headerColor": "#22031f",
+        "fontFamily": "Poppins",
+        "tableColumnColor": "#ffb8b8",
+        "tableColumnOpacity": 1
+      }
+    }
+  ],
+  "quotations": [
+    {
+      "clientName": "ditawi",
+      "_id": "69b5751ad98521d69a4e83b7",
+      "customization": {
+        "primaryColor": "#dc2626",
+        "headerColor": "#22031f",
+        "sectionColor": "#F9FAFB",
+        "fontFamily": "Poppins",
+        "tableColumnColor": "#ffffff",
+        "tableColumnOpacity": 1,
+        "showPortfolio": false,
+        "portfolioLayout": "grid"
+      }
+    },
+    {
+      "clientName": "sample",
+      "_id": "69b5cac32fd487ee6a2dd904",
+      "customization": {
+        "primaryColor": "#D4AF37",
+        "headerColor": "#1F2937",
+        "sectionColor": "#F9FAFB",
+        "fontFamily": "Inter",
+        "showPortfolio": false,
+        "portfolioLayout": "grid",
+        "tableColumnColor": "#ffffff",
+        "tableColumnOpacity": 1
+      }
+    },
+    {
+      "clientName": "sample",
+      "_id": "69b5cada2fd487ee6a2dd930",
+      "customization": {
+        "primaryColor": "#000000",
+        "headerColor": "#72b0dc",
+        "sectionColor": "#F9FAFB",
+        "fontFamily": "Poppins",
+        "tableColumnColor": "#eaf2fb",
+        "tableColumnOpacity": 1,
+        "showPortfolio": false,
+        "portfolioLayout": "grid"
+      }
+    },
+    {
+      "clientName": "wejexob",
+      "_id": "69b4540f1f9c11b50179c1af",
+      "customization": {
+        "primaryColor": "#dc2626",
+        "headerColor": "#22031f",
+        "sectionColor": "#F9FAFB",
+        "fontFamily": "Poppins",
+        "tableColumnColor": "#ffffff",
+        "tableColumnOpacity": 1,
+        "showPortfolio": false,
+        "portfolioLayout": "grid"
+      }
+    },
+    {
+      "clientName": "test",
+      "_id": "69b6e0c689b0e4d1bef1dad8",
+      "customization": {
+        "primaryColor": "#065f46",
+        "headerColor": "#22031f",
+        "sectionColor": "#F9FAFB",
+        "fontFamily": "Poppins",
+        "tableColumnColor": "#ffb8b8",
+        "tableColumnOpacity": 1,
+        "showPortfolio": false,
+        "portfolioLayout": "grid"
+      }
+    }
+  ]
+}

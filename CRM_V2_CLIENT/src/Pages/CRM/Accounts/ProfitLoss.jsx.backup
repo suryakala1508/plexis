@@ -1,0 +1,557 @@
+import React, { useState, useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ArrowLeft, RefreshCw, Calendar, Layers, Clock, Lightbulb, TrendingDown, AlertTriangle, TrendingUp, CheckCircle, DollarSign } from 'lucide-react'
+import { getProfitLossStats } from '../../../services/projectService'
+import { CardSkeleton } from '../../../Components/Loading'
+
+export const ProfitLoss = () => {
+    const navigate = useNavigate()
+    const [loading, setLoading] = useState(true)
+    const [stats, setStats] = useState([])
+    const [view, setView] = useState('monthly') // 'monthly', 'weekly', 'project'
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+    const [error, setError] = useState(null)
+
+    const fetchData = async (currentView = view, year = selectedYear) => {
+        try {
+            setLoading(true)
+            setError(null)
+            const data = await getProfitLossStats(currentView, year)
+            setStats(data || [])
+        } catch (err) {
+            setError(err.message || 'Failed to load Profit & Loss data')
+            console.error('Error fetching P&L data:', err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchData(view, selectedYear)
+    }, [view, selectedYear])
+
+    // Calculate overall financial data
+    const financialData = useMemo(() => {
+        if (!stats.length) return {
+            totalBudget: 0,
+            totalExpenses: 0,
+            profit: 0,
+            expensePercent: 0,
+            profitPercent: 0,
+            totals: {
+                totalBudget: 0,
+                paidPayments: 0,
+                expenses: 0,
+                exactProfit: 0,
+                overduePayments: 0,
+                upcomingPayments: 0,
+                expectedProfit: 0
+            }
+        }
+
+        const totals = {
+            totalBudget: stats.reduce((sum, m) => sum + (m.totalBudget || 0), 0),
+            paidPayments: stats.reduce((sum, m) => sum + m.paidPayments, 0),
+            expenses: stats.reduce((sum, m) => sum + m.expenses, 0),
+            overduePayments: stats.reduce((sum, m) => sum + m.overduePayments, 0),
+            exactProfit: 0,
+            realizedProfit: 0
+        }
+
+        // Use backend calculated profit values for overall totals
+        totals.exactProfit = stats.reduce((sum, m) => sum + m.exactProfit, 0)
+        totals.realizedProfit = stats.reduce((sum, m) => sum + (m.realizedProfit || 0), 0)
+
+        const profit = totals.exactProfit
+
+        const expensePercent = totals.totalBudget > 0 ? ((totals.expenses / totals.totalBudget) * 100).toFixed(1) : 0
+        const profitPercent = totals.totalBudget > 0 ? ((profit / totals.totalBudget) * 100).toFixed(1) : 0
+
+        return {
+            totalBudget: totals.totalBudget,
+            totalExpenses: totals.expenses,
+            profit,
+            expensePercent,
+            profitPercent,
+            totals
+        }
+    }, [stats])
+
+    // Helper function for currency formatting
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0
+        }).format(amount)
+    }
+
+    // AI Insights Generator - Pure data-driven, no static rules
+    const insights = useMemo(() => {
+        if (!stats.length || financialData.totalPayable === 0) return []
+
+        // For P&L page, provide contextual insights based on the view
+        // These are simpler, view-specific observations
+        const contextualInsights = []
+
+        // Critical: Operating at a Loss
+        if (financialData.profit < 0) {
+            contextualInsights.push({
+                type: 'critical',
+                icon: AlertTriangle,
+                message: `Loss of ${formatCurrency(Math.abs(financialData.profit))} detected. Review ${view} breakdown to identify high-expense periods.`,
+                color: 'red',
+                priority: 1
+            })
+        }
+
+        // High Overdue Payments
+        const overdueRatio = (financialData.totals.overduePayments / financialData.totalPayable) * 100
+        if (financialData.totals.overduePayments > 0 && overdueRatio > 10) {
+            contextualInsights.push({
+                type: 'warning',
+                icon: AlertTriangle,
+                message: `${formatCurrency(financialData.totals.overduePayments)} overdue. ${view === 'project' ? 'Check project-wise collection status' : 'Prioritize collections'}.`,
+                color: 'amber',
+                priority: 2
+            })
+        }
+
+        // Healthy Performance Recognition
+        const profitMargin = (financialData.profit / financialData.totalPayable) * 100
+        if (profitMargin >= 30 && overdueRatio < 10) {
+            contextualInsights.push({
+                type: 'success',
+                icon: Lightbulb,
+                message: `Strong ${Math.round(profitMargin)}% margin in ${view} view. ${view === 'project' ? 'Replicate successful project strategies' : 'Maintain this trajectory'}.`,
+                color: 'emerald',
+                priority: 5
+            })
+        }
+
+        // Upcoming Payment Reminder
+        if (financialData.totals.upcomingPayments > financialData.totals.paidPayments * 0.4) {
+            contextualInsights.push({
+                type: 'info',
+                icon: Calendar,
+                message: `${formatCurrency(financialData.totals.upcomingPayments)} upcoming. ${view === 'monthly' ? 'Send payment reminders 3-5 days early' : 'Track payment schedules closely'}.`,
+                color: 'blue',
+                priority: 6
+            })
+        }
+
+        // Return top 2 insights
+        return contextualInsights.sort((a, b) => a.priority - b.priority).slice(0, 2)
+    }, [financialData, stats, view])
+
+    const pieData = [
+        { name: 'Expenses', value: financialData.totalExpenses, color: '#94a3b8' },
+        { name: 'Profit', value: Math.max(0, financialData.profit), color: '#10b981' }
+    ]
+
+    // Calculate KPI Metrics for dashboard
+    const kpiMetrics = useMemo(() => {
+        if (!stats.length) return {
+            profitMargin: 0,
+            collectionRate: 0,
+            avgProjectValue: 0,
+            activeProjects: stats.length
+        }
+
+        const totalRevenue = financialData.totalBudget
+        const totalProfit = financialData.profit
+        const totalReceived = financialData.totals.paidPayments
+
+        // Profit Margin %
+        const profitMargin = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : 0
+
+        // Collection Rate % (received / total budget)
+        const collectionRate = totalRevenue > 0 ? ((totalReceived / totalRevenue) * 100).toFixed(1) : 0
+
+        // Average Project Value (if view is 'project', else monthly/weekly avg)
+        const avgProjectValue = stats.length > 0 ? Math.round(totalRevenue / stats.length) : 0
+
+        // Active projects count (based on view)
+        const activeProjects = view === 'project' ? stats.length : stats.filter(s => s.totalBudget > 0).length
+
+        return {
+            profitMargin,
+            collectionRate,
+            avgProjectValue,
+            activeProjects
+        }
+    }, [stats, financialData, view])
+
+    const viewOptions = [
+        { id: 'monthly', label: 'Monthly', icon: Calendar },
+        { id: 'weekly', label: 'Weekly', icon: Clock },
+        { id: 'project', label: 'Project-wise', icon: Layers }
+    ]
+
+    return (
+        <div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 text-gray-900 p-4 md:p-8'>
+            {/* Enhanced Header */}
+            <div className='mb-8'>
+                {/* Breadcrumb and Title Row */}
+                <div className='flex items-center gap-3 mb-6'>
+                    <button
+                        onClick={() => navigate('/accounts/overview')}
+                        className='p-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-primary-dark transition-all shadow-sm hover:shadow-md group'
+                    >
+                        <ArrowLeft size={20} className='text-gray-600 group-hover:text-primary-dark transition-colors' />
+                    </button>
+                    <div className='flex-1'>
+                        <div className='flex items-center gap-2 text-sm text-gray-500 mb-1'>
+                            <span>Accounts</span>
+                            <span>/</span>
+                            <span className='text-primary-dark font-medium'>Financial Analytics</span>
+                        </div>
+                        <h1 className='text-3xl font-black text-gray-900 tracking-tight'>Profit & Loss Dashboard</h1>
+                    </div>
+                    <button
+                        onClick={() => fetchData()}
+                        className='p-2.5 bg-white border border-gray-200 rounded-xl hover:bg-primary-dark hover:border-primary-dark transition-all shadow-sm hover:shadow-md group'
+                        title='Refresh Data'
+                    >
+                        <RefreshCw size={20} className={`${loading ? 'animate-spin' : ''} text-gray-600 group-hover:text-white transition-colors`} />
+                    </button>
+                </div>
+
+                {/* Controls Row */}
+                <div className='flex flex-wrap items-center gap-4'>
+                    {/* View Switcher */}
+                    <div className='flex items-center bg-white border-2 border-gray-100 rounded-2xl p-1.5 shadow-sm'>
+                        {viewOptions.map((opt) => (
+                            <button
+                                key={opt.id}
+                                onClick={() => setView(opt.id)}
+                                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${view === opt.id
+                                        ? 'bg-primary-dark text-white shadow-lg scale-105'
+                                        : 'text-gray-600 hover:bg-gray-50 hover:text-primary-dark'
+                                    }`}
+                            >
+                                <opt.icon size={18} />
+                                {opt.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className='h-8 w-px bg-gray-200'></div>
+
+                    {/* Stats Badge */}
+                    <div className='flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 rounded-xl'>
+                        <div className='w-2 h-2 bg-green-500 rounded-full animate-pulse'></div>
+                        <span className='text-sm font-semibold text-gray-700'>Live Data</span>
+                    </div>
+                </div>
+            </div>
+
+            {error && (
+                <div className='bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6 text-sm flex items-center gap-2'>
+                    <span className='font-medium'>Error:</span> {error}
+                </div>
+            )}
+
+            {/* Summary Section */}
+            <div className='grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8 items-stretch'>
+                {/* Left - Summary Data */}
+                <div className='lg:col-span-8 bg-white rounded-2xl border border-gray-200 p-10 shadow-sm relative overflow-hidden flex flex-col justify-center'>
+                    {/* Background Decorative Element */}
+                    <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
+                    <div className='space-y-10 relative z-10'>
+                        <div className='flex items-center justify-between max-w-2xl'>
+                            <div className="flex flex-col">
+                                <span className='text-xs font-black text-gray-400 uppercase tracking-widest mb-1'>Total Revenue</span>
+                                <span className='text-base font-bold text-gray-500'>Cumulative {view} budget</span>
+                            </div>
+                            <span className='text-3xl font-bold text-gray-900 tabular-nums'>
+                                {formatCurrency(financialData.totalBudget)}
+                            </span>
+                        </div>
+
+                        <div className='flex items-center justify-between max-w-2xl'>
+                            <div className="flex flex-col">
+                                <span className='text-xs font-black text-gray-400 uppercase tracking-widest mb-1'>Operational Expenses</span>
+                                <div className='flex items-center gap-3 mt-1'>
+                                    <div className='flex items-center gap-1.5 px-2 py-0.5 bg-blue-50 text-blue-700 rounded-md text-[10px] font-black uppercase tracking-wider'>
+                                        {financialData.expensePercent}% of Total
+                                    </div>
+                                </div>
+                            </div>
+                            <span className='text-3xl font-bold text-gray-900 tabular-nums'>
+                                {formatCurrency(financialData.totalExpenses)}
+                            </span>
+                        </div>
+
+                        <div className='pt-8 border-t border-gray-100 flex items-center justify-between max-w-2xl'>
+                            <div className="flex flex-col">
+                                <span className='text-xs font-black text-purple-600 uppercase tracking-widest mb-1'>Estimated Net Profit</span>
+                                <div className={`flex items-center gap-1.5 px-2 py-0.5 ${financialData.profit >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'} rounded-md text-[10px] font-black uppercase tracking-wider mt-1`}>
+                                    {financialData.profitPercent}% Margin
+                                </div>
+                            </div>
+                            <span className={`text-5xl font-black tabular-nums tracking-tight ${financialData.profit >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                                {formatCurrency(financialData.profit)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right - KPI Dashboard */}
+                <div className='lg:col-span-4 bg-white rounded-xl border border-gray-200 p-6 shadow-sm'>
+                    <h3 className='text-sm font-bold text-primary-dark uppercase tracking-wider mb-6'>Key Performance Metrics</h3>
+
+                    {/* KPI Grid - 2x2 */}
+                    <div className='grid grid-cols-2 gap-4'>
+                        {/* Profit Margin */}
+                        <div className='bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl p-4 border border-emerald-200'>
+                            <div className='flex items-center justify-center mb-2'>
+                                <div className='p-2 bg-emerald-100 rounded-lg'>
+                                    <TrendingUp className='text-emerald-600' size={20} />
+                                </div>
+                            </div>
+                            <div className='text-center'>
+                                <div className='text-2xl font-black text-gray-900 mb-1'>
+                                    {kpiMetrics.profitMargin}%
+                                </div>
+                                <div className='text-xs font-medium text-gray-600'>Profit Margin</div>
+                            </div>
+                        </div>
+
+                        {/* Collection Rate */}
+                        <div className='bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl p-4 border border-blue-200'>
+                            <div className='flex items-center justify-center mb-2'>
+                                <div className='p-2 bg-blue-100 rounded-lg'>
+                                    <CheckCircle className='text-blue-600' size={20} />
+                                </div>
+                            </div>
+                            <div className='text-center'>
+                                <div className='text-2xl font-black text-gray-900 mb-1'>
+                                    {kpiMetrics.collectionRate}%
+                                </div>
+                                <div className='text-xs font-medium text-gray-600'>Collection Rate</div>
+                            </div>
+                        </div>
+
+                        {/* Avg Project Value */}
+                        <div className='bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-xl p-4 border border-purple-200'>
+                            <div className='flex items-center justify-center mb-2'>
+                                <div className='p-2 bg-purple-100 rounded-lg'>
+                                    <DollarSign className='text-purple-600' size={20} />
+                                </div>
+                            </div>
+                            <div className='text-center'>
+                                <div className='text-xl font-black text-gray-900 mb-1'>
+                                    {formatCurrency(kpiMetrics.avgProjectValue)}
+                                </div>
+                                <div className='text-xs font-medium text-gray-600'>Avg {view === 'project' ? 'Project' : 'Period'} Value</div>
+                            </div>
+                        </div>
+
+                        {/* Active Count */}
+                        <div className='bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-xl p-4 border border-orange-200'>
+                            <div className='flex items-center justify-center mb-2'>
+                                <div className='p-2 bg-orange-100 rounded-lg'>
+                                    <Layers className='text-orange-600' size={20} />
+                                </div>
+                            </div>
+                            <div className='text-center'>
+                                <div className='text-2xl font-black text-gray-900 mb-1'>
+                                    {kpiMetrics.activeProjects}
+                                </div>
+                                <div className='text-xs font-medium text-gray-600'>{view === 'project' ? 'Projects' : 'Active Periods'}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* AI Financial Insights - Commented out as requested
+            {!loading && insights && insights.length > 0 && (
+                <div className='mb-8 space-y-3'>
+                    <div className='flex items-center gap-2 mb-4'>
+                        <Lightbulb className='text-purple-600' size={20} />
+                        <h3 className='text-sm font-black text-purple-700 uppercase tracking-wider'>AI Financial Insights</h3>
+                    </div>
+                    <div className='grid grid-cols-1 gap-3'>
+                        {insights.map((insight, idx) => (
+                            <div key={idx} className={`rounded-xl border-2 p-4 flex items-start gap-4 transition-all hover:shadow-md ${insight.color === 'red' ? 'bg-red-50 border-red-200 hover:border-red-300' :
+                                insight.color === 'amber' ? 'bg-amber-50 border-amber-200 hover:border-amber-300' :
+                                    insight.color === 'blue' ? 'bg-blue-50 border-blue-200 hover:border-blue-300' :
+                                        'bg-emerald-50 border-emerald-200 hover:border-emerald-300'
+                                }`}>
+                                <div className={`p-2.5 rounded-lg shrink-0 ${insight.color === 'red' ? 'bg-red-100' :
+                                    insight.color === 'amber' ? 'bg-amber-100' :
+                                        insight.color === 'blue' ? 'bg-blue-100' :
+                                            'bg-emerald-100'
+                                    }`}>
+                                    <insight.icon className={`${insight.color === 'red' ? 'text-red-600' :
+                                        insight.color === 'amber' ? 'text-amber-600' :
+                                            insight.color === 'blue' ? 'text-blue-600' :
+                                                'text-emerald-600'
+                                        }`} size={20} />
+                                </div>
+                                <div className='flex-1 min-w-0'>
+                                    <p className={`text-sm font-medium leading-relaxed ${insight.color === 'red' ? 'text-red-900' :
+                                        insight.color === 'amber' ? 'text-amber-900' :
+                                            insight.color === 'blue' ? 'text-blue-900' :
+                                                'text-emerald-900'
+                                        }`}>
+                                        {insight.message}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+            */}
+
+            {loading ? (
+                <CardSkeleton count={1} />
+            ) : (
+                <div className='bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden'>
+                    <div className='bg-primary-dark px-6 py-4 flex items-center justify-between'>
+                        <h2 className='text-lg font-bold text-white capitalize'>{view} Breakdown</h2>
+
+                        {/* Year Dropdown in Table Header */}
+                        <div className='flex items-center gap-2 bg-white/10 px-3 py-1 rounded-lg'>
+                            <Calendar size={14} className='text-white/70' />
+                            <span className='text-xs text-white/80 font-medium'>Year</span>
+                            <select
+                                value={selectedYear}
+                                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                                className='text-xs font-bold text-white bg-transparent outline-none cursor-pointer border-l border-white/20 pl-2'
+                            >
+                                {[2026, 2025, 2024, 2023, 2022, 2021, 2020].map(year => (
+                                    <option key={year} value={year} className='bg-gray-800'>{year}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Table with Fixed Columns */}
+                    <div className='overflow-x-auto relative'>
+                        <table className='w-full min-w-[1000px]'>
+                            <thead>
+                                <tr className='border-b border-gray-200'>
+                                    <th className='sticky left-0 z-20 px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50 min-w-[320px] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'>
+                                        Metric
+                                    </th>
+                                    <th className='sticky left-[320px] z-20 px-6 py-3 text-right text-xs font-bold text-primary-dark uppercase tracking-wider bg-gray-50 min-w-[140px] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]'>
+                                        Total
+                                    </th>
+                                    {stats.map((data, idx) => (
+                                        <th key={idx} className='px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50 min-w-[140px]'>
+                                            {data.month}
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody className='divide-y divide-gray-100'>
+                                {/* Project Budgets Row */}
+                                <tr className='hover:bg-gray-50/50 transition-colors'>
+                                    <td className='sticky left-0 z-10 px-6 py-4 text-sm font-semibold text-gray-700 bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]'>
+                                        Project Budgets [Revenue]
+                                    </td>
+                                    <td className='sticky left-[320px] z-10 px-6 py-4 text-right text-sm font-bold text-gray-900 tabular-nums bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]'>
+                                        {formatCurrency(financialData.totals.totalBudget)}
+                                    </td>
+                                    {stats.map((data, i) => (
+                                        <td key={i} className='px-6 py-4 text-right text-sm text-gray-600 tabular-nums'>
+                                            {formatCurrency(data.totalBudget || 0)}
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                {/* My Expenses Row */}
+                                <tr className='hover:bg-gray-50/50 transition-colors'>
+                                    <td className='sticky left-0 z-10 px-6 py-4 text-sm font-semibold text-gray-700 bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]'>
+                                        My Expenses [-]
+                                    </td>
+                                    <td className='sticky left-[320px] z-10 px-6 py-4 text-right text-sm font-bold text-gray-900 tabular-nums bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]'>
+                                        {formatCurrency(financialData.totals.expenses)}
+                                    </td>
+                                    {stats.map((data, i) => (
+                                        <td key={i} className='px-6 py-4 text-right text-sm text-gray-600 tabular-nums'>
+                                            {formatCurrency(data.expenses)}
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                {/* Net Profit Row */}
+                                <tr className='hover:bg-gray-50/50 transition-colors bg-purple-50'>
+                                    <td className='sticky left-0 z-10 px-6 py-4 bg-purple-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]'>
+                                        <div className='flex items-center gap-2'>
+                                            <span className='text-sm font-bold text-primary-dark'>Net Profit</span>
+                                            <span className='text-xs text-gray-500'>[Budget - Exp]</span>
+                                        </div>
+                                    </td>
+                                    <td className={`sticky left-[320px] z-10 px-6 py-4 text-right text-sm font-bold tabular-nums bg-purple-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)] ${financialData.totals.exactProfit >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                                        {formatCurrency(financialData.totals.exactProfit)}
+                                    </td>
+                                    {stats.map((data, i) => {
+                                        const profit = data.exactProfit;
+                                        return (
+                                            <td key={i} className={`px-6 py-4 text-right text-sm font-semibold tabular-nums ${profit >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                                                {formatCurrency(profit)}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+
+                                {/* Amount Received Row */}
+                                <tr className='hover:bg-gray-50/50 transition-colors'>
+                                    <td className='sticky left-0 z-10 px-6 py-4 text-sm font-semibold text-gray-700 bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]'>
+                                        Amount Received [+]
+                                    </td>
+                                    <td className='sticky left-[320px] z-10 px-6 py-4 text-right text-sm font-bold text-emerald-600 tabular-nums bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]'>
+                                        {formatCurrency(financialData.totals.paidPayments)}
+                                    </td>
+                                    {stats.map((data, i) => (
+                                        <td key={i} className='px-6 py-4 text-right text-sm text-emerald-600 tabular-nums'>
+                                            {formatCurrency(data.paidPayments)}
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                {/* Overdue Payment Row */}
+                                <tr className='hover:bg-gray-50/50 transition-colors'>
+                                    <td className='sticky left-0 z-10 px-6 py-4 text-sm font-semibold text-gray-700 bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]'>
+                                        Overdue client payment
+                                    </td>
+                                    <td className='sticky left-[320px] z-10 px-6 py-4 text-right text-sm font-bold text-red-600 tabular-nums bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]'>
+                                        {formatCurrency(financialData.totals.overduePayments)}
+                                    </td>
+                                    {stats.map((data, i) => (
+                                        <td key={i} className='px-6 py-4 text-right text-sm text-red-600 tabular-nums'>
+                                            {formatCurrency(data.overduePayments)}
+                                        </td>
+                                    ))}
+                                </tr>
+
+                                {/* Realized Profit Row */}
+                                <tr className='hover:bg-gray-50/50 transition-colors border-t-2 border-gray-200'>
+                                    <td className='sticky left-0 z-10 px-6 py-4 text-sm font-semibold text-gray-600 italic bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]'>
+                                        Realized Profit <span className='text-xs text-gray-400'>(Cash - Exp)</span>
+                                    </td>
+                                    <td className={`sticky left-[320px] z-10 px-6 py-4 text-right text-sm font-bold tabular-nums bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)] ${financialData.totals.realizedProfit >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                                        {formatCurrency(financialData.totals.realizedProfit)}
+                                    </td>
+                                    {stats.map((data, i) => (
+                                        <td key={i} className={`px-6 py-4 text-right text-sm tabular-nums ${data.realizedProfit >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                                            {formatCurrency(data.realizedProfit || 0)}
+                                        </td>
+                                    ))}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
+        </div>
+    )
+}
+
+export default ProfitLoss

@@ -1,0 +1,79 @@
+{
+  "name": "crm-v2-server",
+  "version": "2.0.0",
+  "description": "Server 2.0",
+  "keywords": [
+    "server",
+    "plexis",
+    "typescript"
+  ],
+  "homepage": "https://github.com/GenZGalazytech/CRM_V2#readme",
+  "bugs": {
+    "url": "https://github.com/GenZGalazytech/CRM_V2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GenZGalazytech/CRM_V2.git"
+  },
+  "license": "ISC",
+  "author": "SAM",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/server.js",
+    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify -r tsconfig-paths/register src/server.ts",
+    "build": "tsc && tsc-alias"
+  },
+  "dependencies": {
+    "@react-email/components": "^1.0.2",
+    "@react-email/render": "^2.0.0",
+    "@types/multer": "^2.0.0",
+    "@types/sharp": "^0.32.0",
+    "archiver": "^7.0.1",
+    "aws-sdk": "^2.1692.0",
+    "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
+    "blurhash": "^2.0.5",
+    "compression": "^1.8.1",
+    "convert-html-to-pdf": "^1.0.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.4.1",
+    "form-data": "^4.0.5",
+    "google-auth-library": "^10.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.2",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^7.0.12",
+    "sharp": "^0.34.5",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/archiver": "^7.0.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/compression": "^1.8.1",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mongoose": "^5.11.96",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.9.2",
+    "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^7.0.4",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "cross-env": "^10.1.0",
+    "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.3"
+  }
+}

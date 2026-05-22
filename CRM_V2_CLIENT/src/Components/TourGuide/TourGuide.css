@@ -1,0 +1,391 @@
+/* ============================================
+   PLEXIS CRM - DRIVER.JS TOUR CUSTOMIZATION
+   ============================================ */
+
+/* Override Driver.js default styles to match your CRM theme */
+
+/* Popover container - Clean White Card Design */
+.driver-popover.plexis-tour-popover {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  max-width: 400px;
+  animation: slideIn 0.3s ease-out;
+  color: #22031f; /* --color-text-primary */
+}
+
+/* Dark theme variant */
+.driver-popover.plexis-tour-popover.dark-theme {
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* Popover content */
+.driver-popover-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #7c2bbf; /* Brand purple for headings */
+  margin: 0;
+  padding: 24px 24px 12px;
+  line-height: 1.4;
+}
+
+.dark-theme .driver-popover-title {
+  color: #ffffff;
+}
+
+.driver-popover-description {
+  font-size: 14px;
+  color: #4b5563; /* Gray-600 */
+  line-height: 1.6;
+  padding: 0 24px 24px;
+  margin: 0;
+}
+
+/* Emphasised words inside description (Crew, Staff, etc.) */
+.driver-popover-description strong {
+  color: #8b5cf6;
+  font-weight: 700;
+}
+
+.dark-theme .driver-popover-description {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Progress text */
+.driver-popover-progress-text {
+  font-size: 12px;
+  color: #9ca3af; /* Gray-400 */
+  font-weight: 500;
+  padding: 0 24px 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dark-theme .driver-popover-progress-text {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Footer with buttons */
+.driver-popover-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #f9fafb; /* Gray-50 */
+  border-top: 1px solid #f3f4f6;
+  border-radius: 0 0 12px 12px;
+}
+
+.dark-theme .driver-popover-footer {
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Button styling */
+.driver-popover-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+}
+
+/* Previous button */
+.driver-popover-prev-btn {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid transparent;
+}
+
+.driver-popover-prev-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.dark-theme .driver-popover-prev-btn {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.dark-theme .driver-popover-prev-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* Next button */
+.driver-popover-next-btn {
+  background: #9916b1; /* Brand Primary */
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(153, 22, 177, 0.2);
+}
+
+.driver-popover-next-btn:hover {
+  background: #7a0d92;
+  box-shadow: 0 4px 6px rgba(153, 22, 177, 0.3); 
+   transform: translateY(-1px);
+}
+.driver-popover-next-btn-text
+{
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Done/Finish button */
+.driver-popover-done-btn {
+  background: #9916b1;
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(153, 22, 177, 0.2);
+}
+
+.driver-popover-done-btn:hover {
+  background: #7a0d92;
+  box-shadow: 0 4px 6px rgba(153, 22, 177, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Close button - Minimal */
+.driver-popover-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background: transparent;
+  color: #9ca3af;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 18px;
+  padding: 0;
+}
+
+.driver-popover-close-btn:hover {
+  background: #f3f4f6;
+  color: #ef4444; /* Red for close */
+}
+
+.dark-theme .driver-popover-close-btn {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.dark-theme .driver-popover-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* Popover arrow */
+.driver-popover-arrow {
+  border-color: transparent;
+}
+
+.driver-popover-arrow-side-top .driver-popover-arrow {
+  border-top-color: #ffffff;
+}
+
+.driver-popover-arrow-side-bottom .driver-popover-arrow {
+  border-bottom-color: #ffffff;
+}
+
+.driver-popover-arrow-side-left .driver-popover-arrow {
+  border-left-color: #ffffff;
+}
+
+.driver-popover-arrow-side-right .driver-popover-arrow {
+  border-right-color: #ffffff;
+}
+
+/* Dark theme arrows */
+.dark-theme.driver-popover-arrow-side-top .driver-popover-arrow {
+  border-top-color: #1a1a2e;
+}
+
+.dark-theme.driver-popover-arrow-side-bottom .driver-popover-arrow {
+  border-bottom-color: #1a1a2e;
+}
+
+.dark-theme.driver-popover-arrow-side-left .driver-popover-arrow {
+  border-left-color: #1a1a2e;
+}
+
+.dark-theme.driver-popover-arrow-side-right .driver-popover-arrow {
+  border-right-color: #1a1a2e;
+}
+
+/* Highlighted element styling */
+.driver-active-element,
+.plexis-tour-highlight {
+  outline: none !important;
+  position: relative;
+  z-index: 10000;
+}
+
+/* Overlay customization */
+.driver-overlay {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .driver-popover.plexis-tour-popover {
+    max-width: 90vw;
+    margin: 0 5vw;
+  }
+
+  .driver-popover-title {
+    font-size: 16px;
+    padding: 20px 20px 8px;
+  }
+
+  .driver-popover-description {
+    font-size: 13px;
+    padding: 0 20px 20px;
+  }
+
+  .driver-popover-footer {
+    padding: 12px 20px;
+  }
+}
+
+/* Accessibility */
+.driver-popover-btn:focus {
+  outline: 2px solid #9916b1;
+  outline-offset: 2px;
+}
+
+/* Disabled button state */
+.driver-popover-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Special tour steps - subtle border */
+.driver-popover.highlight-important {
+  border-top: 3px solid #f6ad55;
+}
+
+.driver-popover.highlight-warning {
+  border-top: 3px solid #fc8181;
+}
+
+.driver-popover.highlight-success {
+  border-top: 3px solid #48bb78;
+}
+
+/* No element popover (centered) */
+.driver-popover.driver-popover-no-element {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Buttons closer to design reference and using brand colors */
+.driver-popover.plexis-tour-popover .driver-popover-footer {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+}
+
+/* Ensure navigation buttons container takes full width if driver.js wraps them */
+.driver-popover.plexis-tour-popover .driver-popover-navigation-btns {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.driver-popover.plexis-tour-popover .driver-popover-prev-btn {
+  border-radius: 999px;
+  padding: 10px 24px;
+  min-width: 100px;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #7c2bbf;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px;
+  line-height: 1 !important;
+  height: 40px; /* Enforce height */
+  box-sizing: border-box;
+}
+.driver-popover.plexis-tour-popover .driver-popover-next-btn {
+  border-radius: 999px;
+  padding: 10px 24px;
+  min-width: 100px;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  background: var(--primary-color-dark);
+  color: #8c00ff;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px;
+  line-height: 1 !important;
+  height: 40px; /* Enforce height */
+  box-sizing: border-box;
+}
+
+.driver-popover.plexis-tour-popover .driver-popover-prev-btn:hover {
+  background: #f3e8ff;
+  border-color: #d8b4fe;
+}
+.driver-popover.plexis-tour-popover .driver-popover-next-btn:hover {
+background: #f3e8ff;
+  border-color: #d8b4fe;
+}
+
+
+
+.driver-popover.plexis-tour-popover .driver-popover-next-btn svg,
+.driver-popover.plexis-tour-popover .driver-popover-done-btn svg,
+.driver-popover.plexis-tour-popover .driver-popover-prev-btn svg {
+  display: block; /* Remove inline-block baseline weirdness */
+  flex-shrink: 0;
+}
+
+/* Explicitly set order for Back button if in same container */
+.driver-popover.plexis-tour-popover .driver-popover-prev-btn {
+  order: 1; /* Ensure Back is on the left */
+}
+.driver-popover.plexis-tour-popover .driver-popover-next-btn {
+  order: 2; /* Ensure Back is on the left */
+}
+
+
+/* Hide default progress text just in case */
+.driver-popover-progress-text {
+  display: none !important;
+}
