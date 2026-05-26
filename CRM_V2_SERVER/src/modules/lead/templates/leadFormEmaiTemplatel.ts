@@ -296,7 +296,9 @@ style="
 display:block;
 object-fit:contain;
 border:0;
-mix-blend-mode:multiply;
+border-radius:10px;
+background:#ffffff;
+padding:6px;
 "
 />
 
