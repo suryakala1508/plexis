@@ -277,88 +277,47 @@ export const register = async (req: Request, res: Response<RegisterResponse>) =>
   email!,
   "Welcome to PLEXIS!",
   "",
-
   `
 <!DOCTYPE html>
 <html>
-
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <title>Welcome to Plexis</title>
 </head>
+<body style="margin:0;padding:0;background:#F4F5F7;font-family:'Inter',Arial,sans-serif;">
 
-<body style="
-  margin:0;
-  padding:0;
-  background:#F3F4F6;
-  font-family:Arial,sans-serif;
-">
-
-<table width="100%" cellpadding="0" cellspacing="0"
-style="padding:30px 0; background:#F3F4F6;">
-
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 15px;">
 <tr>
 <td align="center">
 
-<table width="620" cellpadding="0" cellspacing="0"
-style="
-  background:#ffffff;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
-">
+<table width="650" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,0.08);">
 
-<!-- HEADER -->
+<!-- HERO SECTION -->
 <tr>
-<td style="
-  background:linear-gradient(135deg,#8B5CF6,#6D28D9);
-  padding:30px;
-">
+<td style="background:linear-gradient(135deg,#8B00C9 0%,#6D28D9 100%);padding:50px 45px;position:relative;overflow:hidden;">
 
-<table width="100%">
+<div style="position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:rgba(255,255,255,0.08);border-radius:50%;"></div>
+<div style="position:absolute;bottom:-60px;left:-60px;width:220px;height:220px;background:rgba(255,255,255,0.06);border-radius:50%;"></div>
+
+<table width="100%" style="position:relative;z-index:2;">
 <tr>
-
 <td align="left">
 
-<h2 style="
-  margin:0;
-  color:white;
-  font-size:24px;
-">
-Studio Name
-</h2>
+<div style="display:inline-block;background:rgba(255,255,255,0.15);color:white;padding:8px 16px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:0.5px;margin-bottom:20px;">
+WELCOME TO PLEXIS
+</div>
 
-<p style="
-  margin:8px 0 0;
-  color:rgba(255,255,255,0.85);
-  font-size:13px;
-  line-height:1.6;
-">
-Hyderabad, Telangana<br/>
-Photography Studio CRM
+<h1 style="margin:0;color:white;font-size:38px;line-height:1.2;font-weight:800;">
+Your Workspace<br/>is Ready 🚀
+</h1>
+
+<p style="margin:20px 0 0;color:rgba(255,255,255,0.88);font-size:15px;line-height:1.8;max-width:430px;">
+Manage your photography studio smarter with AI-powered CRM workflows, client management, bookings, payments, and automation tools.
 </p>
 
 </td>
-
-<td align="right">
-
-<div style="
-  width:60px;
-  height:60px;
-  background:white;
-  border-radius:12px;
-  text-align:center;
-  line-height:60px;
-  font-weight:bold;
-  color:#8B5CF6;
-  font-size:24px;
-">
-S
-</div>
-
-</td>
-
 </tr>
 </table>
 
@@ -367,104 +326,89 @@ S
 
 <!-- BODY -->
 <tr>
-<td style="padding:40px;">
+<td style="padding:50px 45px;">
 
-<h1 style="
-  margin-top:0;
-  color:#111827;
-  font-size:28px;
-">
-Welcome to PLEXIS 🚀
-</h1>
+<h2 style="margin:0;color:#111827;font-size:28px;font-weight:700;">Hello 👋</h2>
 
-<p style="
-  color:#4B5563;
-  font-size:15px;
-  line-height:1.8;
-">
-Hello USER,
-</p>
-
-<p style="
-  color:#4B5563;
-  font-size:15px;
-  line-height:1.8;
-">
-We're excited to have you onboard with Plexis CRM Platform.
-Your account has been successfully created and you can now manage your workflow efficiently.
+<p style="margin-top:18px;color:#4B5563;font-size:15px;line-height:1.9;">
+We're excited to welcome you to the Plexis ecosystem.
+Your account has been successfully activated and you're ready to streamline
+your studio operations with a modern CRM experience.
 </p>
 
 <!-- INFO CARD -->
-<table width="100%" cellpadding="0" cellspacing="0"
-style="
-  margin-top:30px;
-  background:#FAFAFF;
-  border:1px solid #E9D5FF;
-  border-radius:12px;
-">
-
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:35px;background:linear-gradient(to bottom right,#FAFAFF,#F5F3FF);border:1px solid #D8B4FE;border-radius:18px;">
 <tr>
-<td style="
-  padding:18px;
-">
+<td style="padding:28px;">
 
-<p style="
-  margin:0;
-  font-size:14px;
-  color:#111827;
-  line-height:1.8;
-">
+<h3 style="margin-top:0;margin-bottom:22px;color:#111827;font-size:18px;">Account Information</h3>
 
-<strong>Email:</strong> ${email}<br/>
-<strong>Status:</strong> Active<br/>
-<strong>Platform:</strong> Plexis CRM
-
-</p>
+<table width="100%">
+<tr>
+<td style="padding-bottom:14px;">
+<p style="margin:0;color:#6B7280;font-size:13px;">Registered Email</p>
+<p style="margin:6px 0 0;color:#111827;font-size:15px;font-weight:600;">${email}</p>
+</td>
+</tr>
+<tr>
+<td style="padding-bottom:14px;">
+<p style="margin:0;color:#6B7280;font-size:13px;">Account Status</p>
+<p style="margin:6px 0 0;color:#16A34A;font-size:15px;font-weight:700;">● Active</p>
+</td>
+</tr>
+<tr>
+<td>
+<p style="margin:0;color:#6B7280;font-size:13px;">Platform</p>
+<p style="margin:6px 0 0;color:#111827;font-size:15px;font-weight:600;">Plexis CRM Platform</p>
+</td>
+</tr>
+</table>
 
 </td>
 </tr>
+</table>
 
+<!-- FEATURES -->
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:35px;">
+<tr>
+
+<td width="33%" valign="top" style="padding-right:12px;">
+<div style="background:#FAFAFA;border-radius:16px;padding:20px;text-align:center;">
+<div style="font-size:28px;">📸</div>
+<h4 style="margin:14px 0 10px;font-size:16px;color:#111827;">Bookings</h4>
+<p style="margin:0;color:#6B7280;font-size:13px;line-height:1.7;">Manage shoots and appointments efficiently.</p>
+</div>
+</td>
+
+<td width="33%" valign="top" style="padding-right:12px;">
+<div style="background:#FAFAFA;border-radius:16px;padding:20px;text-align:center;">
+<div style="font-size:28px;">🤖</div>
+<h4 style="margin:14px 0 10px;font-size:16px;color:#111827;">Automation</h4>
+<p style="margin:0;color:#6B7280;font-size:13px;line-height:1.7;">Automate client workflows and reminders.</p>
+</div>
+</td>
+
+<td width="33%" valign="top">
+<div style="background:#FAFAFA;border-radius:16px;padding:20px;text-align:center;">
+<div style="font-size:28px;">📈</div>
+<h4 style="margin:14px 0 10px;font-size:16px;color:#111827;">Growth</h4>
+<p style="margin:0;color:#6B7280;font-size:13px;line-height:1.7;">Track studio performance with insights.</p>
+</div>
+</td>
+
+</tr>
 </table>
 
 <!-- BUTTON -->
-<div style="
-  margin-top:35px;
-  text-align:center;
-">
-
-<a href="http://localhost:5173"
-style="
-  display:inline-block;
-  background:linear-gradient(135deg,#8B5CF6,#6D28D9);
-  color:white;
-  text-decoration:none;
-  padding:14px 32px;
-  border-radius:8px;
-  font-size:15px;
-  font-weight:600;
-">
-Open Dashboard
+<div style="text-align:center;margin-top:45px;">
+<a href="http://localhost:5173" style="display:inline-block;background:linear-gradient(135deg,#8B00C9,#6D28D9);color:white;text-decoration:none;padding:16px 38px;border-radius:12px;font-size:15px;font-weight:700;box-shadow:0 10px 25px rgba(139,0,201,0.35);">
+Launch Dashboard
 </a>
-
 </div>
 
-<p style="
-  margin-top:40px;
-  color:#6B7280;
-  font-size:14px;
-  line-height:1.8;
-">
-If you need any assistance, please contact your studio administrator or the Plexis support team.
-</p>
-
-<p style="
-  margin-top:30px;
-  color:#111827;
-  font-size:14px;
-  font-weight:600;
-">
-Regards,<br/>
-Plexis Team
+<p style="margin-top:45px;color:#6B7280;font-size:14px;line-height:1.9;">
+Need help getting started? Our support team is here to assist you anytime.
+We're committed to making your workflow seamless and productive.
 </p>
 
 </td>
@@ -472,88 +416,36 @@ Plexis Team
 
 <!-- FOOTER -->
 <tr>
-<td style="
-  background:#111827;
-  padding:25px;
-">
+<td style="background:#111827;padding:35px 40px;">
 
 <table width="100%">
-
 <tr>
 <td align="left">
-
-<h3 style="
-  margin:0;
-  color:white;
-  font-size:18px;
-">
-Plexis Technologies Pvt. Ltd.
-</h3>
-
-<p style="
-  margin:8px 0 0;
-  color:rgba(255,255,255,0.75);
-  font-size:13px;
-  line-height:1.7;
-">
-AI Powered CRM Platform for Photography Studios
-</p>
-
+<h3 style="margin:0;color:white;font-size:20px;font-weight:700;">Plexis Pvt. Ltd.</h3>
+<p style="margin:12px 0 0;color:rgba(255,255,255,0.75);font-size:13px;line-height:1.8;">AI Powered CRM Platform for Photography Studios</p>
 </td>
-</tr>
-
-</table>
-
-<hr style="
-  border:none;
-  border-top:1px solid rgba(255,255,255,0.1);
-  margin:20px 0;
-"/>
-
-<table width="100%">
-
-<tr>
-
-<td align="left">
-
-<p style="
-  margin:0;
-  color:white;
-  font-size:12px;
-">
-© ${new Date().getFullYear()} Plexis Technologies Pvt. Ltd.
-</p>
-
-</td>
-
 <td align="right">
-
-<a href="https://www.instagram.com/plexis.in/"
-target="_blank"
-style="margin-right:12px; text-decoration:none;">
-
-<img
-src="https://cdn-icons-png.flaticon.com/512/174/174855.png"
-width="20"
-/>
-
+<a href="https://www.instagram.com/plexis.in/" target="_blank" style="margin-right:14px;">
+<img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="22" />
 </a>
-
-<a href="https://www.linkedin.com/company/genz-galaxy/"
-target="_blank"
-style="text-decoration:none;">
-
-<img
-src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
-width="20"
-/>
-
+<a href="https://www.linkedin.com/company/genz-galaxy/" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="22" />
 </a>
-
 </td>
-
 </tr>
+</table>
 
+<hr style="border:none;border-top:1px solid rgba(255,255,255,0.12);margin:25px 0;"/>
+
+<table width="100%">
+<tr>
+<td align="left">
+<p style="margin:0;color:rgba(255,255,255,0.7);font-size:12px;">© ${new Date().getFullYear()} Plexis Pvt. Ltd. All rights reserved.</p>
+</td>
+<td align="right">
+<p style="margin:0;color:rgba(255,255,255,0.7);font-size:12px;">Made with ❤️ by Plexis</p>
+</td>
+</tr>
 </table>
 
 </td>
@@ -563,7 +455,6 @@ width="20"
 
 </td>
 </tr>
-
 </table>
 
 </body>
